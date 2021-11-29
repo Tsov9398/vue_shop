@@ -307,9 +307,9 @@ export default {
         if (res.meta.status !== 201) {
           this.$message.error('添加用户失败')
           // 隐藏添加用户的对话框
-          this.addDialogVisible = false
-          this.getUserList()
         }
+        this.addDialogVisible = false
+        this.getUserList()
       })
     },
     // 展示编辑事件对话框
