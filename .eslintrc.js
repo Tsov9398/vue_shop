@@ -14,6 +14,7 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'space-before-function-paren':['error','never'],
-    'vue/no-unused-vars': "off"
+    'vue/no-unused-vars': "off",
+    'camelcase': [0, {properties: 'always'}]
   }
 }

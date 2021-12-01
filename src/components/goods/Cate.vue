@@ -75,6 +75,7 @@
       title="添加分类"
       :visible.sync="addCateDialogVisible"
       width="50%"
+      @close="addCateDialogClose"
     >
       <!-- 添加分类的表单 -->
       <el-form
@@ -95,14 +96,14 @@
             :props="cascaderprops"
             v-model="selectedKeys"
             @change="parentCateChanged"
+            clearable
+            change-on-select
           ></el-cascader>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addCateDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addCateDialogVisible = false">
-          确 定
-        </el-button>
+        <el-button type="primary" @click="addCate">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -173,6 +174,7 @@ export default {
         label: 'cat_name',
         children: 'children'
       },
+      // 选中的父级分类的数组
       selectedKeys: []
     }
   },
@@ -225,6 +227,40 @@ export default {
     // 选择项发生变化触发这个函数
     parentCateChanged() {
       console.log(this.selectedKeys)
+      if (this.selectedKeys.length > 0) {
+        // 父级分类的Id
+        this.addCateForm.cat_pid =
+          this.selectedKeys[this.selectedKeys.length - 1]
+        // 为当前分类的等级赋值
+        this.addCateForm.cat_level = this.selectedKeys.length
+      } else {
+        this.addCateForm.cat_name = 0
+        // 为当前分类的等级赋值
+        this.addCateForm.cat_level = 0
+      }
+    },
+    // 确定
+    addCate() {
+      this.$refs.addCateFormRef.validate(async valid => {
+        if (!valid) return
+        const { data: res } = await this.$http.post(
+          'categories',
+          this.addCateForm
+        )
+        if (res.meta.status !== 201) {
+          return this.$message.error('添加分类失败')
+        }
+        this.$message.success('添加成功')
+        this.getCateList()
+        this.addCateDialogVisible = false
+      })
+    },
+    // 监听关闭事件重置表单
+    addCateDialogClose() {
+      this.$refs.addCateFormRef.resetFields()
+      this.selectedKeys = []
+      this.addCateForm.cat_level = 0
+      this.addCateForm.cat_pid = 0
     }
   }
 }
@@ -233,5 +269,8 @@ export default {
 <style lang="less" scoped>
 .treeTable {
   margin-top: 16px;
+}
+.el-cascader {
+  width: 100% !important;
 }
 </style>
