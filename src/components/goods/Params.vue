@@ -159,14 +159,19 @@
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
-                  @click="showEditDialog(scope.row.attr_Id)"
+                  @click="showEditDialog(scope.row.attr_id)"
                   size="mini"
                   type="primary"
                   icon="el-icon-edit"
                 >
                   编辑
                 </el-button>
-                <el-button size="mini" type="danger" icon="el-icon-delete">
+                <el-button
+                  @click="removeParams(scope.row.attr_id)"
+                  size="mini"
+                  type="danger"
+                  icon="el-icon-delete"
+                >
                   删除
                 </el-button>
               </template>
